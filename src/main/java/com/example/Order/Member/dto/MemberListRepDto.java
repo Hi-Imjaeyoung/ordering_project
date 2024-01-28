@@ -1,5 +1,6 @@
-package com.example.Order.Member.domain;
+package com.example.Order.Member.dto;
 
+import com.example.Order.Member.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

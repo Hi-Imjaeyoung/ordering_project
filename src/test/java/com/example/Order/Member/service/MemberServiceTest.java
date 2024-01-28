@@ -1,8 +1,8 @@
 package com.example.Order.Member.service;
 
 import com.example.Order.Member.domain.Member;
-import com.example.Order.Member.domain.MemberSaveReqDto;
-import com.example.Order.Member.domain.MemberSaveResDto;
+import com.example.Order.Member.dto.MemberSaveReqDto;
+import com.example.Order.Member.dto.MemberSaveResDto;
 import com.example.Order.Member.domain.Role;
 import com.example.Order.Member.repository.MemberRepo;
 import org.junit.jupiter.api.Assertions;

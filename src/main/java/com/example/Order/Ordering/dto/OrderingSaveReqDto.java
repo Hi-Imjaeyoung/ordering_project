@@ -1,15 +1,12 @@
 package com.example.Order.Ordering.dto;
 
-import com.example.Order.Item.domain.Item;
-import com.example.Order.Member.domain.Member;
-import com.example.Order.Ordering.domain.Ordering;
+import com.example.Order.OrderItem.dto.OrderItemSaveDto;
+import lombok.Data;
 
 import java.util.List;
 
-
+@Data
 public class OrderingSaveReqDto {
     private Long memberId;
-    List<Item> itemList;
-    List<Ordering> orderingList;
-
+    private List<OrderItemSaveDto> orderItems;
 }

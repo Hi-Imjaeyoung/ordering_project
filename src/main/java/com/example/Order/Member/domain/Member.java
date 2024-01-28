@@ -1,5 +1,6 @@
 package com.example.Order.Member.domain;
 
+import com.example.Order.Ordering.domain.Ordering;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -18,7 +20,6 @@ import java.time.LocalDateTime;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // TODO: Long을 원시형으로 선언하지 맙시다!
     private Long id;
     @Column(nullable = false)
     private String name;
@@ -39,5 +40,6 @@ public class Member {
     @Column(columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime updatedTime;
 
-    //TODO : orderings List 필요
+    @OneToMany(mappedBy = "member",fetch = FetchType.LAZY)
+    List<Ordering> orderingList;
 }

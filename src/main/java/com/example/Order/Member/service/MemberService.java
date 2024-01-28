@@ -1,26 +1,34 @@
 package com.example.Order.Member.service;
 
+import com.example.Order.Item.repo.ItemRepo;
 import com.example.Order.Member.domain.*;
+import com.example.Order.Member.dto.MemberListRepDto;
+import com.example.Order.Member.dto.MemberOrderDetailResDto;
+import com.example.Order.Member.dto.MemberSaveReqDto;
+import com.example.Order.Member.dto.MemberSaveResDto;
 import com.example.Order.Member.repository.MemberRepo;
+import com.example.Order.OrderItem.domain.OrderItem;
+import com.example.Order.OrderItem.dto.OrderItemDetailResDto;
+import com.example.Order.Ordering.domain.Ordering;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
 
-    private final MemberRepo memberRepo;
-
     @Autowired
+    private final MemberRepo memberRepo;
     public MemberService(MemberRepo memberRepo){
         this.memberRepo = memberRepo;
     }
 
 
     public MemberSaveResDto memberSave(MemberSaveReqDto memberSaveReqDto) throws IllegalArgumentException{
-        //TODO : 같은 이메일일 경우 예외 던지기.
         if(memberRepo.findByEmail(memberSaveReqDto.getEmail()).isPresent()){
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
@@ -51,5 +59,27 @@ public class MemberService {
         List<Member> members = memberRepo.findAll();
         return members.stream().map(a->new MemberListRepDto(a.getName(), a.getEmail(), a.getAddress(),a.getRole()))
                 .collect(Collectors.toList());
+    }
+
+    public List<MemberOrderDetailResDto> showOrders(Long id) throws EntityNotFoundException{
+        Member member = memberRepo.findById(id).orElseThrow(()->new EntityNotFoundException("없는 회원입니다."));
+        List<Ordering> orderingList = member.getOrderingList();
+        List<MemberOrderDetailResDto> memberOrderDetailResDtos = new ArrayList<>();
+        for(Ordering nowOrder : orderingList){
+            MemberOrderDetailResDto memberOrderDetailResDto = new MemberOrderDetailResDto();
+            memberOrderDetailResDto.setOrderItemDetailResDtos(new ArrayList<>());
+            int totalPrice = 0;
+            for(OrderItem nowDetail:nowOrder.getOrderItems()){
+                int quantity = nowDetail.getQuantity();
+                String itemName = nowDetail.getItem().getName();
+                int price = nowDetail.getItem().getPrice();
+                memberOrderDetailResDto.getOrderItemDetailResDtos().add(new OrderItemDetailResDto(itemName,quantity));
+                totalPrice+=price*quantity;
+            }
+            memberOrderDetailResDto.setTotalPrice(totalPrice);
+            memberOrderDetailResDtos.add(memberOrderDetailResDto);
+        }
+
+        return memberOrderDetailResDtos;
     }
 }

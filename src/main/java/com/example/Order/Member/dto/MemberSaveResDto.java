@@ -1,9 +1,9 @@
-package com.example.Order.Member.domain;
+package com.example.Order.Member.dto;
 
 import lombok.Data;
 
 @Data
-public class MemberSaveReqDto {
+public class MemberSaveResDto {
     private String name;
     private String email;
     private String password;
