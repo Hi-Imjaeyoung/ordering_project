@@ -40,6 +40,7 @@ public class Ordering {
     @Column(columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime updatedTime;
 
+    // Setter를 사용하지 않고 구현 ^^
     public Ordering(Member member, List<OrderItem> orderItems){
         this.member = member;
         this.orderItems = new ArrayList<>();

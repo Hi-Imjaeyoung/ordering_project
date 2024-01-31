@@ -1,15 +1,14 @@
 package com.example.Order.Member.service;
 
-import com.example.Order.Item.repo.ItemRepo;
 import com.example.Order.Member.domain.*;
 import com.example.Order.Member.dto.MemberListRepDto;
 import com.example.Order.Member.dto.MemberOrderDetailResDto;
-import com.example.Order.Member.dto.MemberSaveReqDto;
-import com.example.Order.Member.dto.MemberSaveResDto;
+import com.example.Order.Member.dto.MemberSaveDto;
 import com.example.Order.Member.repository.MemberRepo;
 import com.example.Order.OrderItem.domain.OrderItem;
 import com.example.Order.OrderItem.dto.OrderItemDetailResDto;
 import com.example.Order.Ordering.domain.Ordering;
+import com.example.Order.Ordering.domain.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +26,7 @@ public class MemberService {
         this.memberRepo = memberRepo;
     }
 
-
-    public MemberSaveResDto memberSave(MemberSaveReqDto memberSaveReqDto) throws IllegalArgumentException{
+    public MemberSaveDto memberSave(MemberSaveDto memberSaveReqDto) throws IllegalArgumentException{
         if(memberRepo.findByEmail(memberSaveReqDto.getEmail()).isPresent()){
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
@@ -36,8 +34,6 @@ public class MemberService {
         if(memberSaveReqDto.getRole()==null|| memberSaveReqDto.getRole().equals("일반유저")){
             role = Role.USER;
         }
-        System.out.println(memberSaveReqDto.getName());
-        System.out.println(memberSaveReqDto.getAddress());
         Member member = Member.builder()
                             .name(memberSaveReqDto.getName())
                             .email(memberSaveReqDto.getEmail())
@@ -46,13 +42,13 @@ public class MemberService {
                             .address(memberSaveReqDto.getAddress())
                             .build();
         memberRepo.save(member);
-        MemberSaveResDto memberSaveResDto = new MemberSaveResDto();
-        memberSaveResDto.setName(member.getName());
-        memberSaveResDto.setEmail(member.getEmail());
-        memberSaveResDto.setPassword(member.getPassword());
-        memberSaveResDto.setAddress(member.getAddress());
-        memberSaveResDto.setRole(member.getRole().toString());
-        return memberSaveResDto;
+        MemberSaveDto memberSaveDto = new MemberSaveDto();
+        memberSaveDto.setName(member.getName());
+        memberSaveDto.setEmail(member.getEmail());
+        memberSaveDto.setPassword(member.getPassword());
+        memberSaveDto.setAddress(member.getAddress());
+        memberSaveDto.setRole(member.getRole().toString());
+        return memberSaveDto;
     }
 
     public List<MemberListRepDto> findAll(){
@@ -66,6 +62,7 @@ public class MemberService {
         List<Ordering> orderingList = member.getOrderingList();
         List<MemberOrderDetailResDto> memberOrderDetailResDtos = new ArrayList<>();
         for(Ordering nowOrder : orderingList){
+            if(nowOrder.getOrderStatus().equals(Status.CANCELED)) continue;
             MemberOrderDetailResDto memberOrderDetailResDto = new MemberOrderDetailResDto();
             memberOrderDetailResDto.setOrderItemDetailResDtos(new ArrayList<>());
             int totalPrice = 0;
@@ -77,7 +74,9 @@ public class MemberService {
                 totalPrice+=price*quantity;
             }
             memberOrderDetailResDto.setTotalPrice(totalPrice);
+            memberOrderDetailResDto.setOrderTime(nowOrder.getCreatedTime().toString());
             memberOrderDetailResDtos.add(memberOrderDetailResDto);
+
         }
 
         return memberOrderDetailResDtos;

@@ -50,6 +50,10 @@ public class Item {
         if(buyCount>Integer.parseInt(stockQuantity)){
             throw new IllegalArgumentException("재고가 부족합니다.");
         }
-        this.stockQuantity = String.valueOf(Integer.parseInt(stockQuantity)-2);
+        this.stockQuantity = String.valueOf(Integer.parseInt(stockQuantity)-buyCount);
+    }
+
+    public void rollBack(int buyCount){
+        this.stockQuantity = String.valueOf(Integer.parseInt(stockQuantity)+buyCount);
     }
 }

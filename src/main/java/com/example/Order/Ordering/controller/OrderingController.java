@@ -1,6 +1,7 @@
 package com.example.Order.Ordering.controller;
 
 import com.example.Order.Ordering.domain.Ordering;
+import com.example.Order.Ordering.dto.OrderListDto;
 import com.example.Order.Ordering.dto.OrderingSaveReqDto;
 import com.example.Order.Ordering.service.OrderingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +19,13 @@ public class OrderingController {
     }
 
     @GetMapping("orders")
-    public List<Object> orders(){
-        return null;
+    public List<OrderListDto> orders(){
+        return orderingService.findAll();
     }
 
     @PostMapping("order/new")
     public OrderingSaveReqDto createOrder(@RequestBody OrderingSaveReqDto orderingSaveReqDto){
-        try {
-            orderingService.OrderingCreate(orderingSaveReqDto);
-        }catch (IllegalArgumentException e){
-            System.out.println(e.getMessage());
-        }
-
+        orderingService.OrderingCreate(orderingSaveReqDto);
         return orderingSaveReqDto;
     }
     @PatchMapping("order/{id}/cancel")

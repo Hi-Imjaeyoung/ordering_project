@@ -2,8 +2,7 @@ package com.example.Order.Member.controller;
 
 import com.example.Order.Member.dto.MemberListRepDto;
 import com.example.Order.Member.dto.MemberOrderDetailResDto;
-import com.example.Order.Member.dto.MemberSaveReqDto;
-import com.example.Order.Member.dto.MemberSaveResDto;
+import com.example.Order.Member.dto.MemberSaveDto;
 import com.example.Order.Member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,21 +20,17 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+    // TODO :  AOP 사용 로그 처리
     @PostMapping("member/new")
-    public MemberSaveResDto memberCreate(@RequestBody MemberSaveReqDto memberSaveReqDto){
-        try {
-            return memberService.memberSave(memberSaveReqDto);
-        }catch (IllegalArgumentException e){
-            e.getStackTrace();
-            System.out.println(e.getMessage());
-        }
-        return null;
+    public MemberSaveDto memberCreate(@RequestBody MemberSaveDto memberSaveDto){
+        return memberService.memberSave(memberSaveDto);
     }
 
     @GetMapping("members")
     public List<MemberListRepDto> findAll(){
         return memberService.findAll();
     }
+
 
     @GetMapping("member/{id}/orders")
     public List<MemberOrderDetailResDto> showOrders(@PathVariable Long id){
