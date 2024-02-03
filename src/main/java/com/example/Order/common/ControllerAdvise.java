@@ -14,18 +14,11 @@ public class ControllerAdvise {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String,Object>> illegalEx(IllegalArgumentException e){
-        return this.errorMessage(HttpStatus.BAD_REQUEST,e.getMessage());
+        return ErrorResponseDto.makeMessage(HttpStatus.BAD_REQUEST,e.getMessage());
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Map<String,Object>> entityNFEx(EntityNotFoundException e){
-        return this.errorMessage(HttpStatus.NOT_FOUND,e.getMessage());
-    }
-
-    private ResponseEntity<Map<String,Object>> errorMessage(HttpStatus httpStatus,String message){
-        Map<String,Object> body = new HashMap<>();
-        body.put("status",String.valueOf(httpStatus.value()));
-        body.put("error message",message);
-        return new ResponseEntity(body,httpStatus);
+        return ErrorResponseDto.makeMessage(HttpStatus.NOT_FOUND,e.getMessage());
     }
 }

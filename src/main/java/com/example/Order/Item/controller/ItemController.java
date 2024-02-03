@@ -3,10 +3,9 @@ package com.example.Order.Item.controller;
 import com.example.Order.Item.dto.ItemSaveDto;
 import com.example.Order.Item.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ItemController {
@@ -22,5 +21,6 @@ public class ItemController {
     public void createItem(@RequestBody ItemSaveDto itemSaveDto){
         itemService.createItem(itemSaveDto);
     }
+
 
 }

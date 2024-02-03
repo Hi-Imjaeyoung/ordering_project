@@ -34,6 +34,7 @@ public class Item {
     @Column
     private String imagePath;
 
+    // TODO : 꼭 이걸할 필요는 없습니다.
     @OneToMany(mappedBy = "item",fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
